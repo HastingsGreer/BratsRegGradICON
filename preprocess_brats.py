@@ -12,8 +12,14 @@ def process(iA, isSeg=False):
     iA = iA[None, None, :, :, :]
     iA = iA.float()
     iA = iA / (.9 * torch.max(iA) )
-    iA = F.interpolate(iA, image_shape[2:], mode="trilinear")
+    iA = F.interpolate(iA, size=tuple(image_shape[2:]), mode="trilinear", align_corners=False)
+
+
     return iA
+
+import icon_registration.pretrained_models
+image_shape = icon_registration.pretrained_models.brain_registration_model(pretrained=False).input_shape
+print(image_shape)
 
 for split in ["train"]:
     

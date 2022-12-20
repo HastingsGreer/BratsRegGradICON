@@ -1,0 +1,13 @@
+results/
+evaluation_results/
+network_weights/
+__pycache__/
+*.swp
+*.pickle
+notebooks/.ipynb_checkpoints/
+.ipynb_checkpoints/
+dist/
+build/
+src/icon_registration.egg-info/
+pretrained_OAI_model
+test_files/*
