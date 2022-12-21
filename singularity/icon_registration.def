@@ -1,0 +1,48 @@
+Bootstrap: docker
+From: nvidia/cuda:10.2-cudnn8-devel-ubuntu18.04
+
+%labels
+    Version v0.0.1
+
+%environment
+    export PATH=/miniconda3/bin:$PATH
+
+
+%post
+    apt-get update && apt-get install -y automake build-essential bzip2 wget git default-jre unzip
+    
+    # Install miniconda 
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -b -f -p /miniconda3/
+    rm Miniconda3-latest-Linux-x86_64.sh
+    
+    # pull the conda functions in . /miniconda3/etc/profile.d/conda.sh and make pip, etc. available while in %post
+    export PATH="/miniconda3/bin:$PATH"
+    
+    # Use conda to install pip, numpy
+    conda install -y -c conda-forge pip 
+    
+    # Help conda resolving Python "import" 
+    conda update --all
+    
+    
+    pip install torch==1.12.1+cu102 torchvision==0.13.1+cu102 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu102
+    pip install icon_registration==1.1.1 pandas SimpleITK
+    
+    python /usr/local/bin/download_weights.py
+    mv network_weights/brain_model/brain_model_weights.trch /usr/bin/brain_model_weights.trch
+
+# Copy your files into Singularity container (model+script)
+
+%files
+  # place your python script inside the container
+  icon_script.py /usr/local/bin/my_script.py
+  download_weights.py /usr/local/bin/download_weights.py
+
+
+# ***Please dont change the following lines
+%runscript
+
+    echo "Arguments received: $*"
+    echo 'Executing: python3 /usr/local/bin/my_script.py '"$@"
+    exec python3 /usr/local/bin/my_script.py "$@"
