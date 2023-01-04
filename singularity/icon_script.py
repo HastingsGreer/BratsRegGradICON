@@ -57,7 +57,7 @@ def generate_output(args):
         input_post = icon_registration.pretrained_models.brain_network_preprocess(input_post)
 
         phi_pre_post, phi_post_pre = itk_wrapper.register_pair(
-            model, input_pre, input_post, finetune_steps=None
+            model, input_pre, input_post, finetune_steps=50
         )
 
         # Make your prediction segmentation file for case BraTSReg_001
