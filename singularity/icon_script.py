@@ -16,7 +16,7 @@ def get_model():
     model = icon_registration.pretrained_models.brain_registration_model(
         pretrained=True
     )
-    # model.regis_net.load_state_dict(torch.load("/usr/bin/brain_registration_model.trch"))
+    model.regis_net.load_state_dict(torch.load("/usr/bin/brain_registration_model.trch"))
     return model
 
 
